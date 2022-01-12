@@ -1,6 +1,7 @@
 var activeContainer = null;
 var prevActiveContainer = null;
 var activeContainerIndex = 0;
+var prevActiveContainerIndex = null;
 
 var containerList = [
     "#container0",
@@ -15,11 +16,17 @@ for (var i = 0; i < containerList.length; i++) {
     containerVisibilityList.push(0.0);
 }
 
-
 var contHiddenContainer = 0;
 
+$(document).ready(function() {
+    updateActiveContainer();
+});
+
 $(window).scroll(function (event) {
-    
+    updateActiveContainer();
+});
+
+function updateActiveContainer() {
     var viewportTop = $(window).scrollTop();
     var viewportBottom = viewportTop + $(window).height();
 
@@ -58,9 +65,13 @@ $(window).scroll(function (event) {
     }
 
     prevActiveContainer = activeContainer;
+    prevActiveContainerIndex = activeContainerIndex;
 
     if (contHiddenContainer < containerList.length) {
+
         var mostVisible = 0;
+        activeContainer = null;
+
         for (var i = 0; i < containerList.length; i++) {
             if ((containerVisibilityList[i] > mostVisible) &&
                 (containerVisibilityList[i] > .5)) {
@@ -76,9 +87,11 @@ $(window).scroll(function (event) {
     }
 
     if (prevActiveContainer != activeContainer) {
+
         $(prevActiveContainer).removeClass("active");
         $(activeContainer).addClass("active");
+
         console.log("Active: " + activeContainer + "; prevActive: " + prevActiveContainer + "; index: " + activeContainerIndex);
 
     }
-});
+}
